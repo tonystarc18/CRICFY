@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TG - @CRICSPORTCENTRAL</title>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <style>
+    #video {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <video id="video" controls autoplay></video>
+
+  <select id="qualitySelect">
+    <option value="auto">Auto</option>
+  </select>
+
+  <script>
+    const masterM3u8Url = "YOUR_MASTER_M3U8_URL_HERE"; // Replace with your master m3u8 URL
+
+    const video = document.getElementById('video');
+    const qualitySelect = document.getElementById('qualitySelect');
+
+    if (masterM3u8Url) {
+      if (Hls.isSupported()) {
+        const hls = new Hls();
+
+        hls.loadSource(masterM3u8Url);
+        hls.attachMedia(video);
+
+        // Populate quality options when the manifest is parsed
+        hls.on(Hls.Events.MANIFEST_PARSED, function (_, data) {
+          // Populate the quality selector with available levels
+          data.levels.forEach((level, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            option.textContent = `${level.height}p (${Math.round(level.bitrate / 1000)} kbps)`;
+            qualitySelect.appendChild(option);
+          });
+
+          // Set to "Auto" (default) quality
+          hls.currentLevel = -1; // -1 means auto quality
+        });
+
+        // Listen for quality selection changes
+        qualitySelect.addEventListener('change', function () {
+          const selectedQuality = qualitySelect.value;
+
+          if (selectedQuality === "auto") {
+            hls.currentLevel = -1; // Auto quality
+          } else {
+            hls.currentLevel = parseInt(selectedQuality); // Set selected quality
+          }
+        });
+      } else {
+        // Fallback for browsers that don't support Hls.js
+        video.src = masterM3u8Url;
+        video.play();
+      }
+    } else {
+      // If no master URL is provided, show an error message
+      document.body.innerHTML = '<p style="color: red; text-align: center;">No master m3u8 URL provided. Update the script with your URL.</p>';
+    }
+  </script>
+
+  <script>
+    if (confirm("Join Our Telegram Channel @CRICSPORTCENTRAL For More Links")) {
+      window.location.href = "https://t.me/CRICSPORTCENTRAL";
+    }
+  </script>
+
+  <div style="background-color: #0074d9; text-align: center; padding: 10px;">
+    <a href="https://telegram.me/CRICSPORTCENTRAL" target="_blank">
+      <button id="joinTelegramButton" style="background-color: #fff; color: #0074d9; border: 2px solid #0074d9; padding: 5px 10px;">
+        Join Telegram
+      </button>
+    </a>
+  </div>
+</body>
+</html>
